@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.urls import reverse
@@ -28,6 +30,16 @@ from .models import Question, Choice
 # def results(request, question_id):
 #     question = get_object_or_404(Question, pk=question_id)
 #     return render(request, 'polls/results.html', {'question': question})
+
+def jsonData(request):
+    responseData = {
+        'id': 4,
+        'name': 'Test Response',
+        'roles': ['Admin', 'User']
+    }
+    # latest_question_list = Question.objects.order_by('-pub_date')[:5]
+
+    return HttpResponse(json.dumps(responseData), content_type="application/json")
 
 
 class IndexView(generic.ListView):
