@@ -10,7 +10,6 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 from .models import Question, Choice
 
-
 # def index(request):
 #     latest_question_list = Question.objects.order_by('-pub_date')[:5]
 #     context = {
@@ -50,10 +49,11 @@ def jsonData(request):
 
 # subclass JSONEncoder
 class DateTimeEncoder(JSONEncoder):
-        #Override the default method
-        def default(self, obj):
-            if isinstance(obj, (datetime.date, datetime.datetime)):
-                return obj.isoformat()
+    # Override the default method
+    def default(self, obj):
+        if isinstance(obj, (datetime.date, datetime.datetime)):
+            return obj.isoformat()
+
 
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
