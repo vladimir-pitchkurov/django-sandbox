@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from django.shortcuts import render, get_object_or_404
@@ -5,6 +6,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from django.core.serializers.json import DjangoJSONEncoder
 
 from .models import Question, Choice
 
@@ -31,16 +33,27 @@ from .models import Question, Choice
 #     question = get_object_or_404(Question, pk=question_id)
 #     return render(request, 'polls/results.html', {'question': question})
 
+from json import JSONEncoder
+
+
 def jsonData(request):
     responseData = {
         'id': 4,
         'name': 'Test Response',
         'roles': ['Admin', 'User']
     }
-    # latest_question_list = Question.objects.order_by('-pub_date')[:5]
 
-    return HttpResponse(json.dumps(responseData), content_type="application/json")
+    latest_question_list_json = list(Question.objects.order_by('-pub_date')[:5].values())
 
+    return HttpResponse(json.dumps(latest_question_list_json, cls=DateTimeEncoder), content_type="application/json")
+
+
+# subclass JSONEncoder
+class DateTimeEncoder(JSONEncoder):
+        #Override the default method
+        def default(self, obj):
+            if isinstance(obj, (datetime.date, datetime.datetime)):
+                return obj.isoformat()
 
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
